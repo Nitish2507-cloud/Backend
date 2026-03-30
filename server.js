@@ -12,18 +12,25 @@ app.get("/", (req, res) => {
     res.send("Backend is running 🚀");
 });
 
-// Login API
+// Login API (Firebase token based)
 app.post("/login", (req, res) => {
-    const { username, password } = req.body;
+    const authHeader = req.headers.authorization;
 
-    if (username === "admin" && password === "1234") {
-        res.json({ message: "Login successful ✅" });
+    if (!authHeader) {
+        return res.json({ message: "No token provided ❌" });
+    }
+
+    const token = authHeader.split(" ")[1];
+
+    // 👉 For now just accept token (basic version)
+    if (token) {
+        return res.json({ message: "Login successful ✅" });
     } else {
-        res.json({ message: "Invalid credentials ❌" });
+        return res.json({ message: "Invalid token ❌" });
     }
 });
 
-// PORT (important for deployment)
+// PORT
 const PORT = process.env.PORT || 5000;
 
 // Start server
